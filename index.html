@@ -1,0 +1,703 @@
+<!-- AI生成 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>IC 门禁 · 方案 A</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg2: #111a2e;
+      --card: #151f36;
+      --line: #243154;
+      --ink: #e8eefc;
+      --muted: #9aabc9;
+      --accent: #4f8cff;
+      --accent2: #3dd6c3;
+      --warn: #ffb020;
+      --danger: #ff5d73;
+      --ok: #3dffa8;
+      --radius: 16px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+      --safe-t: env(safe-area-inset-top, 0px);
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100%;
+    }
+    body {
+      padding-top: var(--safe-t);
+      padding-bottom: calc(64px + var(--safe-b) + 12px);
+    }
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    header {
+      padding: 16px 18px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #061018;
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .sub {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #1a2a4a;
+      color: var(--accent2);
+      border: 1px solid var(--line);
+      white-space: nowrap;
+    }
+    .hero {
+      margin: 8px 16px 0;
+      padding: 18px;
+      border-radius: 20px;
+      background:
+        radial-gradient(120% 80% at 100% 0%, rgba(79,140,255,0.28), transparent 50%),
+        radial-gradient(80% 60% at 0% 100%, rgba(61,214,195,0.18), transparent 45%),
+        var(--card);
+      border: 1px solid var(--line);
+    }
+    .hero h2 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .unlock-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .unlock-btn {
+      border: 1px solid var(--line);
+      background: #0e1730;
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 12px 6px;
+      min-height: 76px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .unlock-btn:active { transform: scale(0.97); }
+    .unlock-btn.primary {
+      background: linear-gradient(180deg, #2a5fd6, #1e46a8);
+      border-color: #3d74f0;
+    }
+    .unlock-btn .ico { font-size: 22px; line-height: 1; }
+    .unlock-btn small { color: var(--muted); font-size: 10px; }
+    .status-pill {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--line);
+      font-size: 13px;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--ok);
+      flex-shrink: 0;
+    }
+    .dot.locked { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+    .dot.busy { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 0.8s infinite; }
+    @keyframes pulse { 50% { opacity: 0.35; } }
+
+    nav.tabs {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      z-index: 40;
+      background: rgba(11,18,32,0.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 6px 8px calc(6px + var(--safe-b));
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    nav.tabs button {
+      background: none;
+      border: 0;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 8px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    nav.tabs button .ico { font-size: 18px; }
+    nav.tabs button.active {
+      color: var(--ink);
+      background: #1a2748;
+    }
+    .panel { display: none; padding: 12px 16px 20px; }
+    .panel.active { display: block; }
+    .section-title {
+      margin: 14px 4px 8px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .card h3 {
+      margin: 0 0 6px;
+      font-size: 15px;
+      font-weight: 650;
+    }
+    .card p, .card li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .card ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+    .card li { margin: 4px 0; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #0e1730;
+      border: 1px solid var(--line);
+      color: var(--accent2);
+    }
+    .chip.warn { color: var(--warn); }
+    .chip.blue { color: var(--accent); }
+    table.bom {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    table.bom th, table.bom td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    table.bom th { color: var(--muted); font-weight: 600; }
+    table.bom tr:last-child td { border-bottom: 0; }
+    .search {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #0e1730;
+      color: var(--ink);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 15px;
+      outline: none;
+    }
+    .search:focus { border-color: var(--accent); }
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .flow-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 12px;
+      background: #0e1730;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .flow-step .n {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #1a2a4a;
+      color: var(--accent2);
+      display: grid;
+      place-items: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .flow-step strong { display: block; font-size: 13px; margin-bottom: 2px; }
+    .flow-step span { color: var(--muted); font-size: 12px; }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(78px + var(--safe-b));
+      transform: translateX(-50%) translateY(20px);
+      background: #1c2b52;
+      border: 1px solid var(--accent);
+      color: var(--ink);
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all .25s ease;
+      z-index: 50;
+      max-width: 90vw;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .muted { color: var(--muted); font-size: 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat {
+      background: #0e1730;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat .v { font-size: 22px; font-weight: 700; color: var(--accent2); }
+    .stat .k { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .check:last-child { border-bottom: 0; }
+    .check input { margin-top: 3px; accent-color: var(--accent); width: 18px; height: 18px; }
+    .check label { font-size: 13px; cursor: pointer; }
+    .check .hint { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+    @media (min-width: 520px) {
+      .app { border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+<p data-aigc-mark="1" style="margin:0 0 8px;font-size:10px;line-height:1.3;color:#6b6560;font-weight:400;">AI生成</p>
+
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <h1>IC 门禁 · 方案 A</h1>
+          <p class="sub">课设交付应用 · ESP32 自制板</p>
+        </div>
+      </div>
+      <span class="badge">已定稿</span>
+    </header>
+
+    <div class="hero" id="hero">
+      <h2 id="heroTitle">门已锁好</h2>
+      <p id="heroDesc">点下方任一方式模拟开锁。实体演示以 MFRC522 卡 + 继电器为准。</p>
+      <div class="unlock-row">
+        <button class="unlock-btn primary" data-unlock="home" type="button">
+          <span class="ico">🏠</span>
+          Home App
+          <small>软件 HomeKit</small>
+        </button>
+        <button class="unlock-btn" data-unlock="iphone" type="button">
+          <span class="ico">📡</span>
+          iPhone NFC
+          <small>快捷指令</small>
+        </button>
+        <button class="unlock-btn" data-unlock="android" type="button">
+          <span class="ico">📇</span>
+          安卓/鸿蒙
+          <small>手机当卡 · PN532</small>
+        </button>
+      </div>
+      <div class="status-pill">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">就绪 · 等待开锁指令</span>
+      </div>
+    </div>
+
+    <!-- 方案 -->
+    <section class="panel active" id="panel-plan">
+      <div class="section-title">产品边界</div>
+      <div class="card">
+        <h3>门边旁置演示</h3>
+        <p>不改家里原锁；继电器带 LED/小负载模拟开门。供电：充电宝或内置 3.7V 锂电。</p>
+        <div class="chip-row">
+          <span class="chip">基础 + 提高档</span>
+          <span class="chip blue">网络开锁加分</span>
+          <span class="chip warn">不做 MFi Home Key</span>
+        </div>
+      </div>
+
+      <div class="section-title">开锁通道（定稿）</div>
+      <div class="card">
+        <div class="flow">
+          <div class="flow-step">
+            <div class="n">1</div>
+            <div>
+              <strong>IC 卡（课设正课）</strong>
+              <span>MFRC522 · Mifare 白名单 · OLED / 蜂鸣器 / 继电器</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="n">2</div>
+            <div>
+              <strong>iPhone · Home App</strong>
+              <span>软件 HAP 门锁 · 家庭 App 点按开锁（非 MFi）</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="n">3</div>
+            <div>
+              <strong>iPhone · NFC</strong>
+              <span>碰墙贴 NTAG → 快捷指令自动化 → 联网开锁</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <div class="n">4</div>
+            <div>
+              <strong>安卓 / 鸿蒙 · 当卡直刷</strong>
+              <span>手机模拟 IC 卡 → 板载 PN532 直接读到 → 白名单开锁（不是碰墙贴发命令）</span>
+            </div>
+          </div>
+        </div>
+        <div class="chip-row">
+          <span class="chip warn">原生 Apple Home Key：超范围</span>
+          <span class="chip">实体卡 MFRC522</span>
+          <span class="chip blue">手机卡 PN532</span>
+        </div>
+      </div>
+
+      <div class="section-title">主控与工具链</div>
+      <div class="card">
+        <h3>ESP32-WROOM-32E</h3>
+        <p>自制 PCB 模组上板 · WiFi + BLE · PlatformIO · <strong>macOS</strong> 编译/烧录/串口均可。</p>
+        <ul>
+          <li>不用 ATK-T5 作 HomeKit 主控（涂鸦生态）</li>
+          <li>读卡 MFRC522 · 显示 OLED SSD1306 · 执行继电器旁置</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 需求 -->
+    <section class="panel" id="panel-req">
+      <div class="section-title">功能清单</div>
+      <div class="card">
+        <div class="check">
+          <input type="checkbox" id="f1" />
+          <label for="f1">F1–F5 基础：读 UID、白名单、报警、开门指示、OLED
+            <span class="hint">MFRC522 + 蜂鸣器 + 双色 LED</span>
+          </label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="f2" />
+          <label for="f2">F6–F9 提高：增删卡、进出记录、NVS 掉电保存、防重读
+            <span class="hint">按键进管理态 · 同卡 2–3s 冷却</span>
+          </label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="f3" />
+          <label for="f3">F10 Home App 软件开锁
+            <span class="hint">iPhone 家庭 App · 软件 HomeKit 门锁</span>
+          </label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="f4" />
+          <label for="f4">F11 iPhone NFC → 快捷指令开锁
+            <span class="hint">碰墙贴 · 非 Home Key 读头</span>
+          </label>
+        </div>
+        <div class="check">
+          <input type="checkbox" id="f5" />
+          <label for="f5">F12 安卓/鸿蒙：手机当 IC 卡被直接刷开
+            <span class="hint">HCE 模拟卡 · PN532 读头 · 不是墙贴触发命令</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section-title">验收分级</div>
+      <div class="grid2">
+        <div class="stat"><div class="v">1</div><div class="k">基础：读卡开门</div></div>
+        <div class="stat"><div class="v">2</div><div class="k">提高：管理记录</div></div>
+        <div class="stat"><div class="v">3</div><div class="k">加分：Home/NFC</div></div>
+        <div class="stat"><div class="v">70–120</div><div class="k">约物料 ¥</div></div>
+      </div>
+
+      <div class="section-title">明确不做</div>
+      <div class="card">
+        <ul>
+          <li>安卓·鸿蒙完整门禁业务 App（仅需极简 HCE 虚拟卡）</li>
+          <li>把安卓/鸿蒙做成「碰墙贴触发网络命令」</li>
+          <li>MFi / Home Key 认证与仿制</li>
+          <li>12V 真锁动力回路（可预留光耦）</li>
+          <li>云平台、人脸、量产安规</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- BOM -->
+    <section class="panel" id="panel-bom">
+      <div class="section-title">元器件清单</div>
+      <input class="search" id="bomSearch" type="search" placeholder="搜索：ESP32、继电器、TP4056…" autocomplete="off" />
+      <div class="card" style="margin-top:10px; padding: 8px 10px;">
+        <table class="bom" id="bomTable">
+          <thead>
+            <tr><th>物料</th><th>规格</th><th>数量</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>主控模组</td><td>ESP32-WROOM-32E</td><td>1</td></tr>
+            <tr><td>USB 转串口</td><td>CH340C / CP2102N</td><td>1</td></tr>
+            <tr><td>Type-C 座</td><td>16P SMD</td><td>1</td></tr>
+            <tr><td>充电 IC</td><td>TP4056</td><td>1</td></tr>
+            <tr><td>电池保护</td><td>DW01A + FS8205A</td><td>1</td></tr>
+            <tr><td>锂电池</td><td>3.7V 1000–2000mAh</td><td>1</td></tr>
+            <tr><td>LDO</td><td>AMS1117-3.3 / ME6211</td><td>1</td></tr>
+            <tr><td>读卡（实体卡）</td><td>MFRC522 SOP-16</td><td>1</td></tr>
+            <tr><td>读卡（手机当卡）</td><td>PN532 模组</td><td>1</td></tr>
+            <tr><td>天线匹配电容</td><td>按 NXP 参考（模块可省）</td><td>若干</td></tr>
+            <tr><td>OLED</td><td>0.96" SSD1306 I2C</td><td>1</td></tr>
+            <tr><td>蜂鸣器</td><td>3.3V + S8050 驱动</td><td>1</td></tr>
+            <tr><td>LED</td><td>绿/红/状态 0603</td><td>3</td></tr>
+            <tr><td>按键</td><td>轻触 + 10k 上拉</td><td>3</td></tr>
+            <tr><td>继电器</td><td>3.3V/5V 单刀旁置</td><td>1</td></tr>
+            <tr><td>续流二极管</td><td>SS14 / 1N4148</td><td>1</td></tr>
+            <tr><td>继电器驱动</td><td>S8050 / AO3400</td><td>1</td></tr>
+            <tr><td>锁端子</td><td>2P 3.5mm NO/COM</td><td>1</td></tr>
+            <tr><td>去耦/ bulk</td><td>100nF 0603 · 10µF 0805</td><td>10+4</td></tr>
+            <tr><td>NFC 墙贴（iPhone）</td><td>NTAG213/215</td><td>1–2</td></tr>
+            <tr><td>Mifare 白卡</td><td>S50</td><td>≥5</td></tr>
+            <tr><td>PCB</td><td>2 层 1.6mm 打样</td><td>5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>不进 BOM</h3>
+        <p>MFi 鉴权芯片 · ATK-T5 板 · STM32 裸片全套 · 12V 电磁锁大电流回路。PN532 为「手机当卡」所必需，必须进板。</p>
+      </div>
+    </section>
+
+    <!-- 联调 -->
+    <section class="panel" id="panel-dev">
+      <div class="section-title">Mac 开发路径</div>
+      <div class="card">
+        <h3>PlatformIO · ESP32</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="n">1</div>
+            <div><strong>编译</strong><span><code>pio run</code></span></div>
+          </div>
+          <div class="flow-step">
+            <div class="n">2</div>
+            <div><strong>烧录</strong><span><code>pio run -t upload</code> · USB 串口</span></div>
+          </div>
+          <div class="flow-step">
+            <div class="n">3</div>
+            <div><strong>监视</strong><span><code>pio device monitor</code> · 115200</span></div>
+          </div>
+          <div class="flow-step">
+            <div class="n">4</div>
+            <div><strong>端口</strong><span>macOS：<code>/dev/cu.usbserial*</code> / <code>usbmodem*</code></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="section-title">文档索引</div>
+      <div class="card">
+        <ul>
+          <li><code>docs/需求说明.md</code> — 方案 A 全文</li>
+          <li><code>docs/元器件清单.md</code> — BOM 与追溯</li>
+          <li><code>docs/项目计划.md</code> — 里程碑</li>
+          <li><code>platformio.ini</code> — 已改为 esp32dev</li>
+        </ul>
+      </div>
+      <div class="section-title">演示话术（30 秒）</div>
+      <div class="card">
+        <p>实体卡刷 MFRC522 → OLED 显示 UID。iPhone：Home App 一键开；碰墙贴走快捷指令。安卓/鸿蒙：手机模拟成 IC 卡，直接在 PN532 上刷开——和刷白卡同一套鉴权，不是碰贴发网络命令。原生 Home Key 要 MFi，课设不做。</p>
+      </div>
+    </section>
+  </div>
+
+  <nav class="tabs" aria-label="主导航">
+    <button type="button" class="active" data-panel="panel-plan"><span class="ico">📋</span>方案</button>
+    <button type="button" data-panel="panel-req"><span class="ico">✅</span>需求</button>
+    <button type="button" data-panel="panel-bom"><span class="ico">📦</span>BOM</button>
+    <button type="button" data-panel="panel-dev"><span class="ico">🔧</span>联调</button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var locked = true;
+      var busy = false;
+      var unlockTimer = null;
+
+      var toastEl = document.getElementById('toast');
+      var statusDot = document.getElementById('statusDot');
+      var statusText = document.getElementById('statusText');
+      var heroTitle = document.getElementById('heroTitle');
+      var heroDesc = document.getElementById('heroDesc');
+
+      var channels = {
+        home: {
+          label: 'Home App',
+          ok: '家庭 App 已开锁（软件 HomeKit）',
+          fail: 'Home App 路径正常'
+        },
+        iphone: {
+          label: 'iPhone NFC',
+          ok: '墙贴 → 快捷指令 → 已开锁',
+          fail: 'iPhone NFC 自动化路径正常'
+        },
+        android: {
+          label: '安卓/鸿蒙当卡',
+          ok: 'PN532 已读到手机模拟卡，白名单通过',
+          fail: '手机当 IC 卡直刷（非墙贴命令）'
+        },
+        card: {
+          label: 'IC 卡',
+          ok: '白名单命中，继电器已吸合',
+          fail: '实体卡路径'
+        }
+      };
+
+      function toast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toast._t);
+        toast._t = setTimeout(function () {
+          toastEl.classList.remove('show');
+        }, 2200);
+      }
+
+      function setStatus(mode, text) {
+        statusDot.className = 'dot' + (mode ? ' ' + mode : '');
+        statusText.textContent = text;
+      }
+
+      function doUnlock(key) {
+        if (busy) return;
+        var ch = channels[key] || channels.home;
+        busy = true;
+        setStatus('busy', ch.label + ' · 正在开锁…');
+        heroTitle.textContent = '开锁中…';
+        heroDesc.textContent = '继电器模拟吸合，演示负载点亮';
+        clearTimeout(unlockTimer);
+        unlockTimer = setTimeout(function () {
+          locked = false;
+          busy = false;
+          setStatus('', '已开锁 · ' + ch.label);
+          heroTitle.textContent = '门已打开';
+          heroDesc.textContent = ch.ok + ' · 3 秒后自动落锁';
+          toast('✓ ' + ch.label + ' 开锁成功');
+          setTimeout(function () {
+            locked = true;
+            setStatus('locked', '已落锁 · 等待下一次开锁');
+            heroTitle.textContent = '门已锁好';
+            heroDesc.textContent = '点下方任一方式模拟开锁。实体演示以 MFRC522 卡 + 继电器为准。';
+          }, 3000);
+        }, 700);
+      }
+
+      document.querySelectorAll('[data-unlock]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          doUnlock(btn.getAttribute('data-unlock'));
+        });
+      });
+
+      // Tabs
+      var tabBtns = document.querySelectorAll('nav.tabs button');
+      var panels = document.querySelectorAll('.panel');
+      tabBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-panel');
+          tabBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+          panels.forEach(function (p) { p.classList.toggle('active', p.id === id); });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+
+      // BOM filter
+      var bomSearch = document.getElementById('bomSearch');
+      var bomRows = document.querySelectorAll('#bomTable tbody tr');
+      bomSearch.addEventListener('input', function () {
+        var q = (bomSearch.value || '').trim().toLowerCase();
+        bomRows.forEach(function (row) {
+          var text = row.textContent.toLowerCase();
+          row.style.display = !q || text.indexOf(q) !== -1 ? '' : 'none';
+        });
+      });
+
+      // Checklist persistence (session)
+      document.querySelectorAll('.check input[type=checkbox]').forEach(function (cb) {
+        var key = 'icplan_' + cb.id;
+        try {
+          if (sessionStorage.getItem(key)) cb.checked = true;
+        } catch (e) {}
+        cb.addEventListener('change', function () {
+          try { sessionStorage.setItem(key, cb.checked ? '1' : ''); } catch (e) {}
+        });
+      });
+
+      setStatus('locked', '就绪 · 等待开锁指令');
+    })();
+  </script>
+</body>
+</html>

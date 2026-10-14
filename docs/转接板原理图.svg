@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 700" font-family="-apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <marker id="dot" markerWidth="6" markerHeight="6" refX="3" refY="3"><circle cx="3" cy="3" r="2.5" fill="#4a5568"/></marker>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#4a5568" stroke-width="1"/></marker>
+  </defs>
+  <rect x="0" y="0" width="920" height="700" fill="#fafafa"/>
+  <text x="460" y="28" text-anchor="middle" font-size="16" font-weight="500" fill="#1a202c">IC 卡门禁 · 转接板原理图 v0.3</text>
+  <text x="460" y="48" text-anchor="middle" font-size="11" fill="#718096">纯连接板 · 无源器件仅 I2C 上拉与电源旁路 · 脚序 1:1 = 面包板接线图</text>
+
+  <!-- 电源符号 -->
+  <g font-size="11">
+    <rect x="210" y="70" width="520" height="0" fill="none"/>
+    <!-- +5V rail -->
+    <line x1="210" y1="80" x2="730" y2="80" stroke="#e53e3e" stroke-width="1.5"/>
+    <text x="215" y="72" fill="#e53e3e" font-weight="500">+5V</text>
+    <!-- +3V3 rail -->
+    <line x1="210" y1="130" x2="730" y2="130" stroke="#dd6b20" stroke-width="1.5"/>
+    <text x="215" y="122" fill="#dd6b20" font-weight="500">+3V3</text>
+    <!-- GND rail -->
+    <line x1="210" y1="620" x2="730" y2="620" stroke="#4a5568" stroke-width="1.5"/>
+    <text x="215" y="638" fill="#4a5568" font-weight="500">GND</text>
+  </g>
+
+  <!-- J_MCU -->
+  <g>
+    <rect x="40" y="70" width="150" height="480" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="115" y="92" text-anchor="middle" font-size="13" font-weight="500" fill="#2b6cb0">J_MCU</text>
+    <text x="115" y="108" text-anchor="middle" font-size="10" fill="#718096">ESP32 核心板 H1/H2</text>
+    <!-- pins -->
+    <g font-size="10" fill="#2d3748">
+      <!-- row: pin name left label, net right -->
+      <text x="52" y="140">H2-19 +5V</text>    <line x1="190" y1="136" x2="210" y2="80" stroke="#e53e3e" stroke-width="1.2"/>
+      <text x="52" y="175">H2-1 3V3</text>     <line x1="190" y1="171" x2="210" y2="130" stroke="#dd6b20" stroke-width="1.2"/>
+      <text x="52" y="220">H1-10 IO5</text>    <line x1="190" y1="216" x2="230" y2="216" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="255">H1-9 IO18</text>    <line x1="190" y1="251" x2="230" y2="251" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="290">H1-8 IO19</text>    <line x1="190" y1="286" x2="230" y2="286" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="325">H1-2 IO23</text>    <line x1="190" y1="321" x2="230" y2="321" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="360">H1-5 IO21</text>    <line x1="190" y1="356" x2="230" y2="356" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="395">H1-3 IO22</text>    <line x1="190" y1="391" x2="230" y2="391" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="430">H2-10 IO26</text>   <line x1="190" y1="426" x2="230" y2="426" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="465">H2-11 IO27</text>   <line x1="190" y1="461" x2="230" y2="461" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="500">H2-12 IO14</text>   <line x1="190" y1="496" x2="230" y2="496" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="52" y="535">H2-15 IO13</text>   <line x1="190" y1="531" x2="230" y2="531" stroke="#2b6cb0" stroke-width="1.2"/>
+    </g>
+    <line x1="115" y1="550" x2="115" y2="620" stroke="#4a5568" stroke-width="1.2"/>
+    <text x="52" y="548" font-size="10" fill="#2d3748">H1/H2 GND</text>
+  </g>
+
+  <!-- net labels from J_MCU -->
+  <g font-size="10" font-weight="500">
+    <text x="235" y="212" fill="#2b6cb0">RC_SS</text>
+    <text x="235" y="247" fill="#2b6cb0">SPI_SCK</text>
+    <text x="235" y="282" fill="#2b6cb0">SPI_MISO</text>
+    <text x="235" y="317" fill="#2b6cb0">SPI_MOSI</text>
+    <text x="235" y="352" fill="#2b6cb0">I2C_SDA</text>
+    <text x="235" y="387" fill="#2b6cb0">I2C_SCL</text>
+    <text x="235" y="422" fill="#2b6cb0">RELAY_IN</text>
+    <text x="235" y="457" fill="#2b6cb0">RC_RST</text>
+    <text x="235" y="492" fill="#2b6cb0">SERVO_SIG</text>
+    <text x="235" y="527" fill="#2b6cb0">BUZZER_IO</text>
+  </g>
+
+  <!-- J_RC MFRC522 -->
+  <g>
+    <rect x="320" y="160" width="160" height="210" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="400" y="182" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_RC · MFRC522</text>
+    <text x="400" y="198" text-anchor="middle" font-size="10" fill="#718096">HW-126 8P · 仅 3.3V</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="330" y="222">1 SDA/SS</text><line x1="320" y1="218" x2="300" y2="218" stroke="#2b6cb0" stroke-width="1.2"/>
+      <text x="330" y="246">2 SCK</text>
+      <text x="330" y="270">3 MOSI</text>
+      <text x="330" y="294">4 MISO</text>
+      <text x="330" y="318">5 IRQ (空)</text>
+      <text x="330" y="342">6 GND</text>
+      <text x="330" y="366">7 RST</text>
+      <text x="330" y="350"> </text>
+    </g>
+    <!-- short stubs -->
+    <line x1="320" y1="242" x2="300" y2="242" stroke="#2b6cb0" stroke-width="1.2"/>
+    <line x1="320" y1="266" x2="300" y2="266" stroke="#2b6cb0" stroke-width="1.2"/>
+    <line x1="320" y1="290" x2="300" y2="290" stroke="#2b6cb0" stroke-width="1.2"/>
+    <line x1="320" y1="338" x2="300" y2="338" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="320" y1="362" x2="300" y2="362" stroke="#2b6cb0" stroke-width="1.2"/>
+    <!-- 3V3 pin at bottom -->
+    <text x="330" y="360" font-size="10" fill="#2d3748">8 3V3</text>
+    <line x1="400" y1="370" x2="400" y2="400" stroke="#dd6b20" stroke-width="1.2"/>
+    <circle cx="400" cy="400" r="2.5" fill="#dd6b20"/>
+    <text x="405" y="412" font-size="10" fill="#dd6b20">+3V3</text>
+  </g>
+
+  <!-- net labels going to J_RC -->
+  <g font-size="9" fill="#2b6cb0">
+    <text x="268" y="214">RC_SS</text>
+    <text x="268" y="238">SCK</text>
+    <text x="268" y="262">MOSI</text>
+    <text x="268" y="286">MISO</text>
+    <text x="268" y="334">GND</text>
+    <text x="268" y="358">RST</text>
+  </g>
+
+  <!-- J_PN PN532 -->
+  <g>
+    <rect x="320" y="430" width="150" height="150" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="395" y="452" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_PN · PN532</text>
+    <text x="395" y="468" text-anchor="middle" font-size="10" fill="#718096">4P · 拨码 1→ON 2→OFF</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="330" y="494">1 VCC</text>
+      <text x="330" y="518">2 GND</text>
+      <text x="330" y="542">3 SDA</text>
+      <text x="330" y="566">4 SCL</text>
+    </g>
+    <line x1="395" y1="480" x2="395" y2="480" stroke="none"/>
+    <line x1="320" y1="490" x2="300" y2="490" stroke="#dd6b20" stroke-width="1.2"/>
+    <line x1="320" y1="514" x2="300" y2="514" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="320" y1="538" x2="300" y2="538" stroke="#2b6cb0" stroke-width="1.2"/>
+    <line x1="320" y1="562" x2="300" y2="562" stroke="#2b6cb0" stroke-width="1.2"/>
+  </g>
+  <g font-size="9">
+    <text x="250" y="486" fill="#dd6b20">+3V3</text>
+    <text x="260" y="510" fill="#4a5568">GND</text>
+    <text x="248" y="534" fill="#2b6cb0">I2C_SDA</text>
+    <text x="248" y="558" fill="#2b6cb0">I2C_SCL</text>
+  </g>
+
+  <!-- J_OLED -->
+  <g>
+    <rect x="520" y="430" width="150" height="150" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="595" y="452" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_OLED · SSD1306</text>
+    <text x="595" y="468" text-anchor="middle" font-size="10" fill="#718096">4P I2C 0.96"</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="530" y="494">1 VCC</text>
+      <text x="530" y="518">2 GND</text>
+      <text x="530" y="542">3 SDA</text>
+      <text x="530" y="566">4 SCL</text>
+    </g>
+    <line x1="520" y1="490" x2="500" y2="490" stroke="#dd6b20" stroke-width="1.2"/>
+    <line x1="520" y1="514" x2="500" y2="514" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="520" y1="538" x2="500" y2="538" stroke="#2b6cb0" stroke-width="1.2"/>
+    <line x1="520" y1="562" x2="500" y2="562" stroke="#2b6cb0" stroke-width="1.2"/>
+    <!-- I2C bus short link between PN and OLED -->
+    <line x1="470" y1="538" x2="500" y2="538" stroke="#2b6cb0" stroke-width="1"/>
+    <line x1="470" y1="562" x2="500" y2="562" stroke="#2b6cb0" stroke-width="1"/>
+    <circle cx="470" cy="538" r="2" fill="#2b6cb0"/>
+    <circle cx="470" cy="562" r="2" fill="#2b6cb0"/>
+    <text x="472" y="532" font-size="9" fill="#2b6cb0">I2C 共总线</text>
+  </g>
+
+  <!-- J_K1 relay -->
+  <g>
+    <rect x="520" y="160" width="160" height="175" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="600" y="182" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_K1 · CW-019</text>
+    <text x="600" y="198" text-anchor="middle" font-size="10" fill="#718096">低电平吸合 · 3P 控制侧</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="530" y="224">1 +</text>
+      <text x="530" y="252">2 −</text>
+      <text x="530" y="280">3 S</text>
+    </g>
+    <line x1="520" y1="220" x2="500" y2="220" stroke="#e53e3e" stroke-width="1.2"/>
+    <line x1="520" y1="248" x2="500" y2="248" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="520" y1="276" x2="500" y2="276" stroke="#2b6cb0" stroke-width="1.2"/>
+    <!-- load side -->
+    <text x="530" y="312" font-size="10" fill="#2d3748">NO / COM</text>
+    <line x1="600" y1="320" x2="600" y2="360" stroke="#2b6cb0" stroke-width="1.2"/>
+  </g>
+  <g font-size="9">
+    <text x="478" y="216" fill="#e53e3e">+5V</text>
+    <text x="478" y="244" fill="#4a5568">GND</text>
+    <text x="448" y="272" fill="#2b6cb0">RELAY_IN</text>
+  </g>
+
+  <!-- J_LOCK -->
+  <g>
+    <rect x="545" y="360" width="110" height="70" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="600" y="382" text-anchor="middle" font-size="11" font-weight="500" fill="#2b6cb0">J_LOCK</text>
+    <text x="600" y="398" text-anchor="middle" font-size="9" fill="#718096">2P 3.5mm · 模拟锁</text>
+    <text x="555" y="418" font-size="9" fill="#2d3748">1 NO</text>
+    <text x="615" y="418" font-size="9" fill="#2d3748">2 COM</text>
+  </g>
+
+  <!-- J_SERVO -->
+  <g>
+    <rect x="720" y="160" width="150" height="130" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="795" y="182" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_SERVO · SG90</text>
+    <text x="795" y="198" text-anchor="middle" font-size="10" fill="#718096">3P · 必须 5V</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="730" y="224">1 VCC(红)</text>
+      <text x="730" y="252">2 GND(棕)</text>
+      <text x="730" y="280">3 SIG(橙)</text>
+    </g>
+    <line x1="720" y1="220" x2="700" y2="220" stroke="#e53e3e" stroke-width="1.2"/>
+    <line x1="720" y1="248" x2="700" y2="248" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="720" y1="276" x2="700" y2="276" stroke="#2b6cb0" stroke-width="1.2"/>
+  </g>
+  <g font-size="9">
+    <text x="672" y="216" fill="#e53e3e">+5V</text>
+    <text x="672" y="244" fill="#4a5568">GND</text>
+    <text x="636" y="272" fill="#2b6cb0">SERVO_SIG</text>
+  </g>
+
+  <!-- J_BZ buzzer -->
+  <g>
+    <rect x="720" y="330" width="150" height="130" rx="8" fill="#fff" stroke="#2b6cb0" stroke-width="1.2"/>
+    <text x="795" y="352" text-anchor="middle" font-size="12" font-weight="500" fill="#2b6cb0">J_BZ · 蜂鸣器</text>
+    <text x="795" y="368" text-anchor="middle" font-size="10" fill="#718096">3P 有源 · 高电平响</text>
+    <g font-size="10" fill="#2d3748">
+      <text x="730" y="394">1 VCC</text>
+      <text x="730" y="422">2 GND</text>
+      <text x="730" y="450">3 I/O</text>
+    </g>
+    <line x1="720" y1="390" x2="700" y2="390" stroke="#dd6b20" stroke-width="1.2"/>
+    <line x1="720" y1="418" x2="700" y2="418" stroke="#4a5568" stroke-width="1.2"/>
+    <line x1="720" y1="446" x2="700" y2="446" stroke="#2b6cb0" stroke-width="1.2"/>
+  </g>
+  <g font-size="9">
+    <text x="672" y="386" fill="#dd6b20">+3V3</text>
+    <text x="672" y="414" fill="#4a5568">GND</text>
+    <text x="648" y="442" fill="#2b6cb0">BUZZER_IO</text>
+  </g>
+
+  <!-- passives -->
+  <g>
+    <text x="720" y="510" font-size="11" font-weight="500" fill="#2d3748">阻容</text>
+    <text x="720" y="532" font-size="10" fill="#4a5568">R1 4.7k：+3V3 — I2C_SDA</text>
+    <text x="720" y="552" font-size="10" fill="#4a5568">R2 4.7k：+3V3 — I2C_SCL</text>
+    <text x="720" y="572" font-size="10" fill="#4a5568">C1 100µF：+5V — GND（入口）</text>
+    <text x="720" y="592" font-size="10" fill="#4a5568">C2 100nF：+5V — GND</text>
+    <text x="720" y="612" font-size="10" fill="#4a5568">C3/C4 100nF：+3V3 — GND</text>
+  </g>
+
+  <!-- legend -->
+  <g font-size="10">
+    <line x1="40" y1="665" x2="80" y2="665" stroke="#e53e3e" stroke-width="2"/>
+    <text x="88" y="669" fill="#4a5568">+5V 电源（开发板 VIN）</text>
+    <line x1="250" y1="665" x2="290" y2="665" stroke="#dd6b20" stroke-width="2"/>
+    <text x="298" y="669" fill="#4a5568">+3V3 逻辑电（开发板 3V3）</text>
+    <line x1="500" y1="665" x2="540" y2="665" stroke="#2b6cb0" stroke-width="2"/>
+    <text x="548" y="669" fill="#4a5568">信号线</text>
+    <line x1="630" y1="665" x2="670" y2="665" stroke="#4a5568" stroke-width="2"/>
+    <text x="678" y="669" fill="#4a5568">GND 共地</text>
+    <text x="40" y="690" font-size="9" fill="#a0aec0">J_RC-5 IRQ 与 J_MCU 未用脚悬空 · PN532 IRQ/RST 不接 · 供电唯一入口 = 核心板 Type-C</text>
+  </g>
+</svg>
